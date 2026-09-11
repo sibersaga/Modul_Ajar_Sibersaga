@@ -13,6 +13,7 @@ import {
   Edit3
 } from 'lucide-react';
 import { ModulAjarData } from '../types';
+import { LkpdViewer } from './LkpdViewer';
 
 interface DocumentPreviewProps {
   data: ModulAjarData;
@@ -572,27 +573,13 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
 
       {/* Halaman Lampiran LKPD */}
       {data.lkpdLengkap ? (
-        <div className="a4-page bg-white shadow-xl mx-auto my-8 p-10 md:p-[60px] text-sm text-slate-800 break-words mt-10 print:mt-0 print:shadow-none print:break-before-page relative">
-          <div className="flex items-center justify-between pb-3 mb-6 border-b border-slate-200 print:hidden">
-            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
-              <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
-              Lampiran Lembar Kerja Peserta Didik (LKPD)
-            </span>
-            {onOpenLkpdGenerator && (
-              <button
-                type="button"
-                onClick={onOpenLkpdGenerator}
-                className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-md bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 shadow-2xs transition-all cursor-pointer"
-              >
-                <Edit3 className="w-3 h-3" />
-                <span>Ubah / Edit LKPD</span>
-              </button>
-            )}
-          </div>
-          <h2 className="text-xl font-bold text-slate-900 text-center mb-6">LEMBAR KERJA PESERTA DIDIK (LKPD)</h2>
-          <div className="prose prose-sm prose-slate max-w-none whitespace-pre-wrap font-serif">
-            {data.lkpdLengkap}
-          </div>
+        <div className="max-w-[210mm] mx-auto my-8 print:my-0 print:break-before-page">
+          <LkpdViewer
+            content={data.lkpdLengkap}
+            modulData={data}
+            isEditable={false}
+            onPrint={onPrint}
+          />
         </div>
       ) : (
         onOpenLkpdGenerator && (

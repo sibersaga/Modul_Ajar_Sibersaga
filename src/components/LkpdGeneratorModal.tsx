@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { ModulAjarData } from '../types';
 import { buildLkpdPrompt, generateLocalFallbackLkpd, LkpdPromptOptions } from '../utils/lkpdPromptBuilder';
+import { LkpdViewer } from './LkpdViewer';
 
 interface LkpdGeneratorModalProps {
   isOpen: boolean;
@@ -471,71 +472,15 @@ export const LkpdGeneratorModal: React.FC<LkpdGeneratorModalProps> = ({
                     </div>
                   )}
 
-                  {/* Actions Bar for Result */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-100">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                        Dokumen LKPD Siap Pakai
-                      </span>
-                      <span className="text-[11px] text-slate-500">
-                        ({generatedLkpd.split(/\s+/).filter(Boolean).length} kata)
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setIsEditingResult(!isEditingResult)}
-                        className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 transition-all cursor-pointer"
-                      >
-                        <Edit3 className="w-3.5 h-3.5" />
-                        <span>{isEditingResult ? 'Selesai Edit' : 'Edit Teks'}</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={handleCopyResult}
-                        className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 transition-all cursor-pointer"
-                      >
-                        {copiedResult ? (
-                          <>
-                            <Check className="w-3.5 h-3.5 text-emerald-600" />
-                            <span>Tersalin!</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="w-3.5 h-3.5" />
-                            <span>Salin Teks</span>
-                          </>
-                        )}
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={handlePrintLkpdOnly}
-                        className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 transition-all cursor-pointer"
-                        title="Cetak khusus halaman LKPD ini saja"
-                      >
-                        <Printer className="w-3.5 h-3.5" />
-                        <span>Cetak LKPD</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Document View / Edit */}
-                  {isEditingResult ? (
-                    <textarea
-                      rows={16}
-                      value={generatedLkpd}
-                      onChange={(e) => setGeneratedLkpd(e.target.value)}
-                      className="w-full font-mono text-xs leading-relaxed rounded-xl border border-slate-300 p-4 text-slate-900 bg-white focus:border-emerald-500 focus:outline-none resize-y"
-                    />
-                  ) : (
-                    <div className="bg-slate-50/70 rounded-xl border border-slate-200 p-5 font-serif text-sm leading-relaxed text-slate-900 whitespace-pre-wrap max-h-[500px] overflow-y-auto shadow-inner">
-                      {generatedLkpd}
-                    </div>
-                  )}
+                  {/* Enhanced Visual & Structured LKPD Viewer */}
+                  <LkpdViewer
+                    content={generatedLkpd}
+                    modulData={modulData}
+                    onChangeContent={setGeneratedLkpd}
+                    onPrint={handlePrintLkpdOnly}
+                    isEditable={true}
+                    compact={true}
+                  />
                 </div>
               ) : (
                 <div className="p-10 text-center bg-slate-50 rounded-2xl border border-slate-200">

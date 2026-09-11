@@ -685,17 +685,159 @@ app.post('/api/generate-docx', async (req: Request, res: Response) => {
           properties: {},
           children: [
             new Paragraph({
-              text: 'LEMBAR KERJA PESERTA DIDIK (LKPD)',
-              heading: HeadingLevel.HEADING_2,
               alignment: AlignmentType.CENTER,
-              spacing: { after: 400 },
+              spacing: { before: 200, after: 60 },
+              children: [
+                new TextRun({
+                  text: 'LEMBAR KERJA PESERTA DIDIK (LKPD)',
+                  bold: true,
+                  size: 28,
+                  color: '047857',
+                }),
+              ],
             }),
-            ...data.lkpdLengkap.split('\n').map((line: string) => 
-              new Paragraph({
-                children: [new TextRun({ text: line, size: 22 })],
-                spacing: { after: 200 },
-              })
-            ),
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              spacing: { after: 60 },
+              children: [
+                new TextRun({
+                  text: 'KURIKULUM MERDEKA • PEMBELAJARAN MENDALAM (DEEP LEARNING)',
+                  bold: true,
+                  size: 20,
+                  color: '334155',
+                }),
+              ],
+            }),
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              spacing: { after: 240 },
+              children: [
+                new TextRun({
+                  text: `${data.namaSekolah || 'SDN 3 Purwosari'} • Topik: ${data.topikPembelajaran || data.temaSubtema}`,
+                  size: 18,
+                  color: '64748B',
+                }),
+              ],
+            }),
+
+            // Identitas Siswa Table
+            new Table({
+              width: { size: 9500, type: WidthType.DXA },
+              borders: tableBorderSolid,
+              rows: [
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      width: { size: 5500, type: WidthType.DXA },
+                      margins: cellMargins,
+                      children: [
+                        new Paragraph({ children: [new TextRun({ text: 'Nama Siswa/Kelompok : .....................................................', size: 19 })] }),
+                        new Paragraph({ spacing: { before: 80 }, children: [new TextRun({ text: `Kelas / Fase              : ${data.kelas || 'Kelas 1'} (Fase ${data.fase || 'A'})`, size: 19, bold: true })] }),
+                        new Paragraph({ spacing: { before: 80 }, children: [new TextRun({ text: 'Nomor Absen             : .....................................................', size: 19 })] }),
+                      ],
+                    }),
+                    new TableCell({
+                      width: { size: 4000, type: WidthType.DXA },
+                      margins: cellMargins,
+                      children: [
+                        new Paragraph({ children: [new TextRun({ text: 'Hari / Tanggal : .........................................', size: 19 })] }),
+                        new Paragraph({ spacing: { before: 80 }, children: [new TextRun({ text: `Alokasi Waktu  : ${data.alokasiWaktu || '2 x 35 Menit'}`, size: 19 })] }),
+                        new Paragraph({ spacing: { before: 80 }, children: [new TextRun({ text: 'Nilai & Paraf  : [                             ]', size: 19, bold: true })] }),
+                      ],
+                    }),
+                  ],
+                }),
+              ],
+            }),
+
+            // Box Infografis Alur Belajar Deep Learning
+            new Paragraph({ spacing: { before: 180, after: 60 }, children: [] }),
+            new Table({
+              width: { size: 9500, type: WidthType.DXA },
+              borders: tableBorderSolid,
+              rows: [
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      width: { size: 9500, type: WidthType.DXA },
+                      shading: { fill: 'ECFDF5' },
+                      margins: cellMargins,
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new TextRun({ text: '★ INFOGRAFIS ALUR BELAJAR DEEP LEARNING (MINDFUL, MEANINGFUL, JOYFUL):', bold: true, size: 20, color: '065F46' }),
+                          ],
+                        }),
+                        new Paragraph({
+                          spacing: { before: 80 },
+                          children: [
+                            new TextRun({ text: '1. Amati & Sadari (Mindful): ', bold: true, size: 18, color: '047857' }),
+                            new TextRun({ text: 'Mencermati stimulus dan fenomena sekitar dengan rasa ingin tahu tinggi.\n', size: 18 }),
+                            new TextRun({ text: '2. Jelajahi Konsep (Meaningful): ', bold: true, size: 18, color: '0369A1' }),
+                            new TextRun({ text: 'Mendiskusikan ide bersama teman & mengaitkan ilmu dengan pengalaman nyata.\n', size: 18 }),
+                            new TextRun({ text: '3. Bernalar & Kreasi (Joyful): ', bold: true, size: 18, color: 'B45309' }),
+                            new TextRun({ text: 'Menyelesaikan tantangan berpikir kritis dan menuangkan karya orisinal.\n', size: 18 }),
+                            new TextRun({ text: '4. Refleksi & Aksi: ', bold: true, size: 18, color: 'BE123C' }),
+                            new TextRun({ text: 'Mengungkapkan perasaan dan menerapkan nilai positif dalam keseharian.', size: 18 }),
+                          ],
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+              ],
+            }),
+
+            new Paragraph({ spacing: { before: 200, after: 100 }, children: [] }),
+
+            // Parsed LKPD Content
+            ...data.lkpdLengkap.split('\n').map((line: string) => {
+              const trimmed = line.trim();
+              if (!trimmed || trimmed.startsWith('===') || trimmed.startsWith('---')) {
+                return new Paragraph({ spacing: { before: 60, after: 60 }, children: [] });
+              }
+
+              const isSectionHeading = trimmed.match(/^[A-H]\.\s/);
+              const isTaskHeading = trimmed.toUpperCase().startsWith('TUGAS') || trimmed.toUpperCase().startsWith('SOAL');
+
+              if (isSectionHeading) {
+                return new Paragraph({
+                  spacing: { before: 240, after: 100 },
+                  children: [
+                    new TextRun({
+                      text: trimmed,
+                      bold: true,
+                      size: 22,
+                      color: '047857',
+                    }),
+                  ],
+                });
+              }
+
+              if (isTaskHeading) {
+                return new Paragraph({
+                  spacing: { before: 180, after: 80 },
+                  children: [
+                    new TextRun({
+                      text: trimmed,
+                      bold: true,
+                      size: 21,
+                      color: '1E293B',
+                    }),
+                  ],
+                });
+              }
+
+              return new Paragraph({
+                spacing: { after: 100 },
+                children: [
+                  new TextRun({
+                    text: trimmed,
+                    size: 20,
+                  }),
+                ],
+              });
+            }),
           ],
         }] : []),
       ],

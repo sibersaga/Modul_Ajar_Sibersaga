@@ -77,30 +77,32 @@ Buatkan Lembar Kerja Peserta Didik (LKPD) yang menarik, berorientasi Pembelajara
 ${additionalFocus ? `- Fokus Tambahan Guru: ${additionalFocus}` : ''}
 
 [STRUKTUR & FORMAT DOKUMEN LKPD]
-Susun dokumen LKPD dengan bagian-bagian berikut secara rapi:
+Susun dokumen LKPD dengan bagian-bagian berikut secara rapi, berformat teratur dan siap cetak:
 1. KOP LEMBAR KERJA PESERTA DIDIK (LKPD)
    - Judul Kegiatan yang Menarik & Menyenangkan
    - Identitas Siswa: Nama Peserta Didik / Kelompok, Kelas, Hari/Tanggal, Alokasi Waktu
-2. TUJUAN KEGIATAN PEMBELAJARAN
+2. INFOGRAFIS & PETA KONSEP SINGKAT
+   - Sajikan 3-4 butir intisari visual berupa "Peta Alur Belajar" atau fakta menarik "Tahukah Kamu?" terkait ${topik} agar siswa lebih bersemangat.
+3. TUJUAN KEGIATAN PEMBELAJARAN
    - Kalimat ramah anak tentang apa yang akan dicapai dan dipelajari
-3. ALAT & BAHAN YANG DIPERLUKAN
+4. ALAT & BAHAN YANG DIPERLUKAN
    - Sebutkan alat dan bahan sederhana yang mudah didapat siswa/guru
-4. PETUNJUK PENGERJAAN
+5. PETUNJUK PENGERJAAN
    - Tuliskan 3-4 petunjuk pengerjaan yang singkat, jelas, dan memotivasi
-5. STIMULUS KONTEKSTUAL (APERSEPSI)
+6. STIMULUS KONTEKSTUAL (APERSEPSI)
    - Narasi pemantik singkat, cerita keseharian, atau deskripsi gambar yang membangkitkan rasa ingin tahu siswa
-6. KEGIATAN EKSPLORASI UTAMA
+7. KEGIATAN EKSPLORASI UTAMA
    - Langkah kerja aktivitas yang membuat siswa aktif bergerak, mengamati, berdiskusi, atau berkarya
-7. LEMBAR SOAL & PENUGASAN (Sebanyak ${questionCount} Soal/Tugas Bervariasi)
+8. LEMBAR SOAL & PENUGASAN (Sebanyak ${questionCount} Soal/Tugas Bervariasi)
    - Berikan variasi: isian bernalar, menjodohkan konsep, menganalisis situasi, dan tugas ekspresi/kreasi
-   - Sediakan ruang/garis tempat siswa menuliskan jawaban mereka
-8. REFLEKSI SAYA (UNTUK SISWA)
+   - Sediakan ruang/garis bertitik tempat siswa menuliskan jawaban mereka
+9. REFLEKSI SAYA (UNTUK SISWA)
    - Pilihan emotikon perasaan (senang, bingung, bersemangat) dan 1-2 pertanyaan refleksi singkat
-9. KUNCI JAWABAN & RUBRIK PENILAIAN SINGKAT (PANDUAN GURU)
+10. KUNCI JAWABAN & RUBRIK PENILAIAN SINGKAT (PANDUAN GURU)
    - Kunci jawaban ringkas dan kriteria penskoran untuk memudahkan guru menilai
 
 CATATAN:
-Tuliskan langsung isi dokumen LKPD lengkap dalam Bahasa Indonesia baku yang komunikatif dan ramah anak. Jangan sertakan pengantar seperti "Berikut adalah LKPD...".`;
+Tuliskan langsung isi dokumen LKPD lengkap dalam Bahasa Indonesia baku yang komunikatif dan ramah anak. Gunakan penomoran dan pembagian bab (A., B., C., D., E., F., G., H.) yang jelas agar rapi. Jangan sertakan pengantar seperti "Berikut adalah LKPD...".`;
 }
 
 /**
@@ -132,7 +134,16 @@ Hari / Tanggal : ..............................................................
 Alokasi Waktu  : 2 x 35 Menit
 
 ------------------------------------------------------------------------
-B. TUJUAN PEMBELAJARAN
+B. INFOGRAFIS ALUR BELAJAR DEEP LEARNING (MINDFUL - MEANINGFUL - JOYFUL)
+------------------------------------------------------------------------
+★ ALUR EKSPLORASI SISWA HARI INI:
+  [1] Amati & Sadari   : Cermati stimulus dan fenomena sekitar tentang "${materi}".
+  [2] Jelajahi Konsep  : Diskusikan pemahaman bersama teman dengan bergotong royong.
+  [3] Bernalar & Kreasi: Tuntaskan latihan berpikir kritis dan buat kreasi karyamu.
+  [4] Refleksi & Aksi  : Ungkapkan perasaanmu dan terapkan nilai positif dalam keseharian.
+
+------------------------------------------------------------------------
+C. TUJUAN PEMBELAJARAN
 ------------------------------------------------------------------------
 Melalui kegiatan aktif di LKPD ini, peserta didik dapat:
 1. ${tujuan}
@@ -140,14 +151,14 @@ Melalui kegiatan aktif di LKPD ini, peserta didik dapat:
 3. Menunjukkan sikap mandiri, bernalar kritis, dan bergotong royong dalam menyelesaikan tugas.
 
 ------------------------------------------------------------------------
-C. ALAT DAN BAHAN
+D. ALAT DAN BAHAN
 ------------------------------------------------------------------------
 1. Alat tulis (pensil, penghapus, dan penggaris)
 2. Pensil warna atau krayon
 3. Buku pendamping atau lembar kerja ini
 
 ------------------------------------------------------------------------
-D. PETUNJUK PENGERJAAN
+E. PETUNJUK PENGERJAAN
 ------------------------------------------------------------------------
 1. Berdoalah sebelum mulai mengerjakan lembar kerja.
 2. Tuliskan nama lengkap dan kelas pada kolom identitas di atas.
@@ -156,7 +167,7 @@ D. PETUNJUK PENGERJAAN
 5. Kerjakan dengan jujur, teliti, dan penuh kegembiraan!
 
 ------------------------------------------------------------------------
-E. STIMULUS KONTEKSTUAL (BACALAH DENGAN TELITI)
+F. STIMULUS KONTEKSTUAL (BACALAH DENGAN TELITI)
 ------------------------------------------------------------------------
 Halo sahabat hebat! Hari ini kita akan belajar hal yang sangat seru tentang ${topik}.
 Di sekitar kita, ada banyak hal menarik yang berkaitan dengan materi ini.
@@ -164,7 +175,7 @@ Ketika kita mengamati dengan teliti, kita bisa menemukan contoh nyata dari ${mat
 Mari kita lakukan eksplorasi bersama dan buktikan kemampuan terbaikmu!
 
 ------------------------------------------------------------------------
-F. AKTIVITAS UTAMA & PENUGASAN SISWA
+G. AKTIVITAS UTAMA & PENUGASAN SISWA
 ------------------------------------------------------------------------
 
 TUGAS 1: Mengenal dan Mengamati (Pilihan Ganda Bernalar)
