@@ -1,0 +1,6 @@
+{
+  "name": "Modul Ajar Generator",
+  "description": "Generator Modul Ajar dan RPP Kurikulum Merdeka berbasis AI dengan ekspor dokumen DOCX, pratinjau interaktif, dan kustomisasi pembelajaran mendalam.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
