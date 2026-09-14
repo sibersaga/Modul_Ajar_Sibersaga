@@ -15,7 +15,6 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { ModulAjarData } from '../types';
-import { AiSparkleButton } from './AiSparkleButton';
 
 interface FormObjectivesProps {
   data: ModulAjarData;
@@ -105,10 +104,10 @@ export const FormObjectives: React.FC<FormObjectivesProps> = ({
           </div>
           <div>
             <h2 className="text-base font-bold text-slate-900">
-              2. Tema, Capaian & Karakteristik Pembelajaran
+              2. Karakteristik & Desain Pembelajaran
             </h2>
             <p className="text-xs text-slate-500">
-              Rumusan Capaian Pembelajaran, Profil Pelajar Pancasila, dan Desain Pedagogis Mendalam.
+              Profil Pelajar Pancasila, dan Desain Pedagogis Mendalam.
             </p>
           </div>
         </div>
@@ -120,39 +119,6 @@ export const FormObjectives: React.FC<FormObjectivesProps> = ({
       </div>
 
       <div className="space-y-5">
-        {/* Tema & Subtema */}
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <label htmlFor="input-temaSubtema" className="text-xs font-semibold text-slate-700">
-              Tema & Subtema Pembelajaran <span className="text-rose-500 font-bold">*</span>
-            </label>
-            <AiSparkleButton
-              field="temaSubtema"
-              currentValue={data.temaSubtema}
-              context={data}
-              onSuccess={(val) => onChange('temaSubtema', val)}
-              title="Rekomendasikan tema dan subtema sesuai fase dan jenjang"
-            />
-          </div>
-          <input
-            type="text"
-            id="input-temaSubtema"
-            value={data.temaSubtema}
-            onChange={(e) => onChange('temaSubtema', e.target.value)}
-            placeholder="Contoh: Diriku / Identitasku atau Keluargaku / Peran Anggota Keluarga"
-            className={`w-full text-sm rounded-lg border px-3 py-2 text-slate-800 focus:outline-none transition-all ${
-              showErrors && validationErrors.temaSubtema
-                ? 'border-rose-400 bg-rose-50/20 focus:border-rose-500 focus:ring-2 focus:ring-rose-200'
-                : 'border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200'
-            }`}
-          />
-          {showErrors && validationErrors.temaSubtema && (
-            <p className="mt-1 text-[11px] text-rose-600 font-medium flex items-center gap-1">
-              <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" /> {validationErrors.temaSubtema}
-            </p>
-          )}
-        </div>
-
         {/* Dimensi Profil Lulusan / P3 */}
         <div>
           <div className="flex items-center justify-between mb-2">
@@ -199,12 +165,7 @@ export const FormObjectives: React.FC<FormObjectivesProps> = ({
               <label htmlFor="input-elemenCp" className="text-xs font-semibold text-slate-700">
                 Elemen Capaian Pembelajaran (CP) <span className="text-rose-500 font-bold">*</span>
               </label>
-              <AiSparkleButton
-                field="elemenCp"
-                currentValue={data.elemenCp}
-                context={data}
-                onSuccess={(val) => onChange('elemenCp', val)}
-              />
+              
             </div>
             <textarea
               id="input-elemenCp"
@@ -225,23 +186,18 @@ export const FormObjectives: React.FC<FormObjectivesProps> = ({
             )}
           </div>
 
-          {/* Identifikasi Peserta Didik */}
+              {/* Identifikasi Peserta Didik */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label htmlFor="input-identifikasiPesertaDidik" className="text-xs font-semibold text-slate-700">
                 Identifikasi Karakteristik Peserta Didik
               </label>
-              <AiSparkleButton
-                field="identifikasiPesertaDidik"
-                currentValue={data.identifikasiPesertaDidik}
-                context={data}
-                onSuccess={(val) => onChange('identifikasiPesertaDidik', val)}
-              />
+              
             </div>
             <textarea
               id="input-identifikasiPesertaDidik"
               rows={3}
-              value={data.identifikasiPesertaDidik}
+              value={data.identifikasiPesertaDidik || ''}
               onChange={(e) => onChange('identifikasiPesertaDidik', e.target.value)}
               placeholder="Contoh: Peserta didik memiliki minat visual dan kinestetik yang tinggi..."
               className="w-full text-sm rounded-lg border border-slate-300 px-3 py-2 text-slate-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none transition-all resize-y"
@@ -257,17 +213,12 @@ export const FormObjectives: React.FC<FormObjectivesProps> = ({
               <label htmlFor="input-materiPembelajaran" className="text-xs font-semibold text-slate-700">
                 Materi Pembelajaran <span className="text-rose-500 font-bold">*</span>
               </label>
-              <AiSparkleButton
-                field="materiPembelajaran"
-                currentValue={data.materiPembelajaran}
-                context={data}
-                onSuccess={(val) => onChange('materiPembelajaran', val)}
-              />
+              
             </div>
             <textarea
               id="input-materiPembelajaran"
               rows={3}
-              value={data.materiPembelajaran}
+              value={data.materiPembelajaran || ''}
               onChange={(e) => onChange('materiPembelajaran', e.target.value)}
               placeholder="Contoh: Mengenal anggota tubuh, aturan menjaga kebersihan diri..."
               className={`w-full text-sm rounded-lg border px-3 py-2 text-slate-800 focus:outline-none transition-all resize-y ${
@@ -289,17 +240,12 @@ export const FormObjectives: React.FC<FormObjectivesProps> = ({
               <label htmlFor="input-tujuanPembelajaran" className="text-xs font-semibold text-slate-700">
                 Tujuan Pembelajaran (TP) <span className="text-rose-500 font-bold">*</span>
               </label>
-              <AiSparkleButton
-                field="tujuanPembelajaran"
-                currentValue={data.tujuanPembelajaran}
-                context={data}
-                onSuccess={(val) => onChange('tujuanPembelajaran', val)}
-              />
+              
             </div>
             <textarea
               id="input-tujuanPembelajaran"
               rows={3}
-              value={data.tujuanPembelajaran}
+              value={data.tujuanPembelajaran || ''}
               onChange={(e) => onChange('tujuanPembelajaran', e.target.value)}
               placeholder="Contoh: Peserta didik mampu menyebutkan nama anggota tubuh dengan jelas..."
               className={`w-full text-sm rounded-lg border px-3 py-2 text-slate-800 focus:outline-none transition-all resize-y ${
@@ -323,17 +269,12 @@ export const FormObjectives: React.FC<FormObjectivesProps> = ({
               <label htmlFor="input-topikPembelajaran" className="text-xs font-semibold text-slate-700">
                 Topik Pembelajaran Spesifik <span className="text-rose-500 font-bold">*</span>
               </label>
-              <AiSparkleButton
-                field="topikPembelajaran"
-                currentValue={data.topikPembelajaran}
-                context={data}
-                onSuccess={(val) => onChange('topikPembelajaran', val)}
-              />
+              
             </div>
             <input
               type="text"
               id="input-topikPembelajaran"
-              value={data.topikPembelajaran}
+              value={data.topikPembelajaran || ''}
               onChange={(e) => onChange('topikPembelajaran', e.target.value)}
               placeholder="Contoh: Aku dan Tubuhku Ciptaan Tuhan"
               className={`w-full text-sm rounded-lg border px-3 py-2 text-slate-800 focus:outline-none transition-all ${
@@ -354,17 +295,12 @@ export const FormObjectives: React.FC<FormObjectivesProps> = ({
               <label htmlFor="input-desainLintasDisiplin" className="text-xs font-semibold text-slate-700">
                 Lintas Disiplin Ilmu
               </label>
-              <AiSparkleButton
-                field="desainPembelajaranLintasDisiplinIlmu"
-                currentValue={data.desainPembelajaranLintasDisiplinIlmu}
-                context={data}
-                onSuccess={(val) => onChange('desainPembelajaranLintasDisiplinIlmu', val)}
-              />
+              
             </div>
             <input
               type="text"
               id="input-desainLintasDisiplin"
-              value={data.desainPembelajaranLintasDisiplinIlmu}
+              value={data.desainPembelajaranLintasDisiplinIlmu || ''}
               onChange={(e) => onChange('desainPembelajaranLintasDisiplinIlmu', e.target.value)}
               placeholder="Contoh: Pendidikan Pancasila, Bahasa Indonesia, Seni Rupa"
               className="w-full text-sm rounded-lg border border-slate-300 px-3 py-2 text-slate-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none transition-all"
@@ -378,17 +314,12 @@ export const FormObjectives: React.FC<FormObjectivesProps> = ({
             <label htmlFor="input-praktikPedagogis" className="text-xs font-semibold text-slate-700">
               Praktik Pedagogis (3 Pilar Pembelajaran Mendalam: Mindful, Meaningful, Joyful)
             </label>
-            <AiSparkleButton
-              field="desainPembelajaranPraktikPedagogis"
-              currentValue={data.desainPembelajaranPraktikPedagogis}
-              context={data}
-              onSuccess={(val) => onChange('desainPembelajaranPraktikPedagogis', val)}
-            />
+            
           </div>
           <textarea
             id="input-praktikPedagogis"
             rows={2}
-            value={data.desainPembelajaranPraktikPedagogis}
+            value={data.desainPembelajaranPraktikPedagogis || ''}
             onChange={(e) => onChange('desainPembelajaranPraktikPedagogis', e.target.value)}
             placeholder="Contoh: Berkesadaran (Mindful) saat mengenal diri, Bermakna (Meaningful) dikaitkan rutinitas di rumah, dan Menggembirakan (Joyful) lewat bermain peran..."
             className="w-full text-sm rounded-lg border border-slate-300 px-3 py-2 text-slate-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none transition-all resize-y"
@@ -405,25 +336,7 @@ export const FormObjectives: React.FC<FormObjectivesProps> = ({
               </label>
             </div>
             <div className="flex items-center gap-2">
-              <AiSparkleButton
-                field="desainPembelajaranKemitraanPembelajaran"
-                currentValue={
-                  Array.isArray(data.desainPembelajaranKemitraanPembelajaran)
-                    ? data.desainPembelajaranKemitraanPembelajaran.join('\n')
-                    : data.desainPembelajaranKemitraanPembelajaran || ''
-                }
-                context={data}
-                onSuccess={(val) => {
-                  const lines = val
-                    .split('\n')
-                    .map((l) => l.replace(/^[•\-\d.]\s*/, '').trim())
-                    .filter(Boolean);
-                  onChange(
-                    'desainPembelajaranKemitraanPembelajaran',
-                    lines.length > 0 ? lines : [val.trim()]
-                  );
-                }}
-              />
+              
               <button
                 type="button"
                 onClick={() =>
@@ -489,25 +402,7 @@ export const FormObjectives: React.FC<FormObjectivesProps> = ({
               </label>
             </div>
             <div className="flex items-center gap-2">
-              <AiSparkleButton
-                field="desainPembelajaranLingkunganPembelajaran"
-                currentValue={
-                  Array.isArray(data.desainPembelajaranLingkunganPembelajaran)
-                    ? data.desainPembelajaranLingkunganPembelajaran.join('\n')
-                    : data.desainPembelajaranLingkunganPembelajaran || ''
-                }
-                context={data}
-                onSuccess={(val) => {
-                  const lines = val
-                    .split('\n')
-                    .map((l) => l.replace(/^[•\-\d.]\s*/, '').trim())
-                    .filter(Boolean);
-                  onChange(
-                    'desainPembelajaranLingkunganPembelajaran',
-                    lines.length > 0 ? lines : [val.trim()]
-                  );
-                }}
-              />
+              
               <button
                 type="button"
                 onClick={() =>
@@ -573,25 +468,7 @@ export const FormObjectives: React.FC<FormObjectivesProps> = ({
               </label>
             </div>
             <div className="flex items-center gap-2">
-              <AiSparkleButton
-                field="desainPembelajaranPemanfaatanDigital"
-                currentValue={
-                  Array.isArray(data.desainPembelajaranPemanfaatanDigital)
-                    ? data.desainPembelajaranPemanfaatanDigital.join('\n')
-                    : data.desainPembelajaranPemanfaatanDigital || ''
-                }
-                context={data}
-                onSuccess={(val) => {
-                  const lines = val
-                    .split('\n')
-                    .map((l) => l.replace(/^[•\-\d.]\s*/, '').trim())
-                    .filter(Boolean);
-                  onChange(
-                    'desainPembelajaranPemanfaatanDigital',
-                    lines.length > 0 ? lines : [val.trim()]
-                  );
-                }}
-              />
+              
               <button
                 type="button"
                 onClick={() =>

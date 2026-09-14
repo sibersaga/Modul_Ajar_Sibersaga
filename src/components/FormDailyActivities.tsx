@@ -12,7 +12,6 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { ModulAjarData, HariKegiatan, DetailKegiatanItem } from '../types';
-import { AiSparkleButton } from './AiSparkleButton';
 import {
   PRINSIP_DEEP_LEARNING_OPTIONS,
   getSintaksOptions,
@@ -166,15 +165,7 @@ export const FormDailyActivities: React.FC<FormDailyActivitiesProps> = ({
           <label className="text-xs font-bold text-slate-800 uppercase tracking-wide">
             Kegiatan Awal (Orientasi, Apersepsi, Pemantik Semangat)
           </label>
-          <AiSparkleButton
-            field="rencanaPelaksanaanAwal"
-            currentValue={data.rencanaPelaksanaanAwal?.join('\n')}
-            context={data}
-            onSuccess={(val) => {
-              const lines = val.split('\n').map((l) => l.replace(/^[•\-\d.]\s*/, '').trim()).filter(Boolean);
-              onChange('rencanaPelaksanaanAwal', lines);
-            }}
-          />
+          
         </div>
         <div className="space-y-2">
           {(data.rencanaPelaksanaanAwal || []).map((item, idx) => (
@@ -325,17 +316,7 @@ export const FormDailyActivities: React.FC<FormDailyActivitiesProps> = ({
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <AiSparkleButton
-                        field={`kegiatanHari${activeDay.hari}Jp${keg.jp}`}
-                        currentValue={`${keg.judul}: ${keg.deskripsi}`}
-                        context={data}
-                        onSuccess={(val) => {
-                          handleUpdateKegiatan(activeDayIndex, kegIdx, {
-                            deskripsi: val,
-                          });
-                        }}
-                        title="Sempurnakan kegiatan ini dengan AI"
-                      />
+                      
                       <button
                         type="button"
                         onClick={() => handleDeleteKegiatan(activeDayIndex, kegIdx)}
@@ -532,15 +513,7 @@ export const FormDailyActivities: React.FC<FormDailyActivitiesProps> = ({
           <label className="text-xs font-bold text-slate-800 uppercase tracking-wide">
             Kegiatan Penutup (Refleksi, Penguatan, Doa)
           </label>
-          <AiSparkleButton
-            field="rencanaPelaksanaanPenutup"
-            currentValue={data.rencanaPelaksanaanPenutup?.join('\n')}
-            context={data}
-            onSuccess={(val) => {
-              const lines = val.split('\n').map((l) => l.replace(/^[•\-\d.]\s*/, '').trim()).filter(Boolean);
-              onChange('rencanaPelaksanaanPenutup', lines);
-            }}
-          />
+          
         </div>
         <div className="space-y-2">
           {(data.rencanaPelaksanaanPenutup || []).map((item, idx) => (

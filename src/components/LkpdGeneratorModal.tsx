@@ -142,7 +142,7 @@ export const LkpdGeneratorModal: React.FC<LkpdGeneratorModalProps> = ({
         throw new Error(json.message || 'Gagal menghasilkan teks LKPD');
       }
     } catch (err: any) {
-      console.warn('API LKPD generation failed, falling back to rich local generator:', err);
+      console.info('API LKPD generation failed, falling back to rich local generator:', err);
       // High quality local fallback so the user always gets a complete LKPD!
       const fallback = generateLocalFallbackLkpd(modulData);
       setGeneratedLkpd(fallback);

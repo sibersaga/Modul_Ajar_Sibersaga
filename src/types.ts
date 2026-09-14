@@ -1,6 +1,15 @@
 export type JenjangPendidikan = 'PAUD' | 'SD' | 'SMP' | 'SMA';
 export type FaseKurikulum = 'Fondasi' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
 
+export type PaperSize = 'A4' | 'F4' | 'CUSTOM';
+
+export interface PaperConfig {
+  size: PaperSize;
+  customWidthMm?: number;
+  customHeightMm?: number;
+  orientation?: 'portrait' | 'landscape';
+}
+
 export interface DetailKegiatanItem {
   jp: number;
   judul: string;
@@ -68,6 +77,7 @@ export interface ModulAjarData {
   lembarKerjaSiswa: string;
   rubrikPenilaian: string;
   lkpdLengkap?: string; // New field for full LKPD
+  paperConfig?: PaperConfig; // Paper size configuration (A4, F4, CUSTOM)
 }
 
 export interface AutofillRequest {

@@ -15,11 +15,6 @@ export const AiGenerateModal: React.FC<AiGenerateModalProps> = ({
   currentData,
   onGenerated,
 }) => {
-  const [fokus, setFokus] = useState(
-    currentData.temaSubtema
-      ? `Tema: ${currentData.temaSubtema}`
-      : 'Matematika SD: Mengenal Nilai Tempat Bilangan Cacah'
-  );
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [generateLKPD, setGenerateLKPD] = useState(false);
@@ -30,6 +25,8 @@ export const AiGenerateModal: React.FC<AiGenerateModalProps> = ({
     e.preventDefault();
     setLoading(true);
     setErrorMsg('');
+
+    const fokus = `Tema: ${currentData.temaSubtema || ''}, CP: ${currentData.elemenCp || ''}`;
 
     try {
       const res = await fetch('/api/ai/generate-full-modul', {
@@ -46,7 +43,8 @@ export const AiGenerateModal: React.FC<AiGenerateModalProps> = ({
             bulan: currentData.bulan,
             mingguKe: currentData.mingguKe,
             alokasiWaktu: currentData.alokasiWaktu,
-            temaSubtema: fokus,
+            temaSubtema: currentData.temaSubtema,
+            elemenCp: currentData.elemenCp,
           },
           fokusPembelajaran: fokus,
           generateLKPD: generateLKPD,
@@ -71,14 +69,6 @@ export const AiGenerateModal: React.FC<AiGenerateModalProps> = ({
       setLoading(false);
     }
   };
-
-  const QUICK_TOPICS = [
-    'SD Kelas 1: Aku & Panca Indra Sehat',
-    'SD Kelas 4: IPAS Bagian Tubuh Tumbuhan & Fotosintesis',
-    'SD Kelas 5: Siklus Air dan Pelestarian Lingkungan',
-    'PAUD Fondasi: Mengenal Ragam Emosi dan Berbagi Senyum',
-    'SMP Kelas 7: Interaksi Sosial dalam Masyarakat Majemuk',
-  ];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
@@ -110,37 +100,9 @@ export const AiGenerateModal: React.FC<AiGenerateModalProps> = ({
 
         {/* Form Body */}
         <form onSubmit={handleGenerate} className="p-6 space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-              Tema / Mata Pelajaran / Topik yang Ingin Dibuat
-            </label>
-            <textarea
-              rows={3}
-              value={fokus}
-              onChange={(e) => setFokus(e.target.value)}
-              placeholder="Ketik topik atau tema yang Anda inginkan..."
-              className="w-full text-sm rounded-xl border border-slate-300 p-3 text-slate-800 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 focus:outline-none transition-all"
-              required
-            />
-          </div>
-
-          <div>
-            <span className="block text-[11px] font-semibold text-slate-500 mb-1.5">
-              Atau pilih topik cepat:
-            </span>
-            <div className="flex flex-wrap gap-1.5">
-              {QUICK_TOPICS.map((topic) => (
-                <button
-                  type="button"
-                  key={topic}
-                  onClick={() => setFokus(topic)}
-                  className="text-xs px-2.5 py-1 rounded-lg border border-slate-200 bg-slate-50 hover:bg-amber-50 hover:border-amber-200 text-slate-700 transition-colors text-left"
-                >
-                  {topic}
-                </button>
-              ))}
-            </div>
-          </div>
+          <p className="text-sm text-slate-700 mb-2">
+            AI akan menyusun seluruh modul ajar secara mendalam berdasarkan Identitas Dokumen, Tema, dan CP yang telah Anda masukkan pada Bagian 1.
+          </p>
 
           <div className="bg-slate-50 rounded-xl p-3.5 border border-slate-200 text-xs text-slate-600 space-y-1">
             <div className="font-semibold text-slate-800 flex items-center gap-1.5">

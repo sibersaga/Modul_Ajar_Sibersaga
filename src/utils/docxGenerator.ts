@@ -13,9 +13,15 @@ import {
   Header,
   Footer
 } from 'docx';
-import { ModulAjarData } from '../types';
+import { ModulAjarData, PaperConfig } from '../types';
+import { getPaperDimensionsDxa } from './paperUtils';
 
-export async function generateDocxBlob(data: ModulAjarData): Promise<Blob> {
+export async function generateDocxBlob(
+  data: ModulAjarData,
+  paperConfig?: PaperConfig
+): Promise<Blob> {
+  const activePaper = paperConfig || data.paperConfig || { size: 'A4' };
+  const { widthDxa, heightDxa } = getPaperDimensionsDxa(activePaper);
   const tableBorderNone = {
     top: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
     bottom: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
@@ -53,7 +59,12 @@ export async function generateDocxBlob(data: ModulAjarData): Promise<Blob> {
   };
 
   const createKeyValueRow = (key: string, value: string | string[]) => {
-    const valText = Array.isArray(value) ? value.join('\n• ') : value;
+    let cleanValue = Array.isArray(value) ? value.join('\n• ') : value;
+    if (typeof cleanValue === 'string') {
+      cleanValue = cleanValue.replace(/\*\*/g, '').replace(/\*/g, '').replace(/#/g, '');
+    }
+    const displayValue = Array.isArray(value) ? `• ${cleanValue}` : cleanValue || '-';
+    
     return new TableRow({
       children: [
         new TableCell({
@@ -70,7 +81,7 @@ export async function generateDocxBlob(data: ModulAjarData): Promise<Blob> {
           margins: cellMargins,
           children: [
             new Paragraph({
-              children: [new TextRun({ text: Array.isArray(value) ? `• ${valText}` : valText || '-', size: 20 })],
+              children: [new TextRun({ text: displayValue, size: 20 })],
             }),
           ],
         }),
@@ -183,11 +194,12 @@ export async function generateDocxBlob(data: ModulAjarData): Promise<Blob> {
         }
         if (keg.langkah && keg.langkah.length > 0) {
           keg.langkah.forEach((l, lIdx) => {
+            const cleanLangkah = l.replace(/\*\*/g, '').replace(/\*/g, '').replace(/#/g, '');
             paras.push(
               new Paragraph({
                 spacing: { after: 20 },
                 bullet: { level: 0 },
-                children: [new TextRun({ text: `${lIdx + 1}. ${l}`, size: 18 })],
+                children: [new TextRun({ text: `${lIdx + 1}. ${cleanLangkah}`, size: 18 })],
               })
             );
           });
@@ -226,11 +238,15 @@ export async function generateDocxBlob(data: ModulAjarData): Promise<Blob> {
       {
         properties: {
           page: {
+            size: {
+              width: widthDxa,
+              height: heightDxa,
+            },
             margin: {
-              top: 1440,
-              right: 1440,
-              bottom: 1440,
-              left: 1440,
+              top: 1134, // ~20mm
+              right: 1134,
+              bottom: 1134,
+              left: 1134,
             },
           },
         },
@@ -464,7 +480,20 @@ export async function generateDocxBlob(data: ModulAjarData): Promise<Blob> {
       },
       // LKPD Page (if exists)
       ...(data.lkpdLengkap ? [{
-        properties: {},
+        properties: {
+          page: {
+            size: {
+              width: widthDxa,
+              height: heightDxa,
+            },
+            margin: {
+              top: 1134,
+              right: 1134,
+              bottom: 1134,
+              left: 1134,
+            },
+          },
+        },
         children: [
           new Paragraph({
             alignment: AlignmentType.CENTER,
@@ -573,53 +602,89 @@ export async function generateDocxBlob(data: ModulAjarData): Promise<Blob> {
           new Paragraph({ spacing: { before: 200, after: 100 }, children: [] }),
 
           // Parsed LKPD Content
-          ...data.lkpdLengkap.split('\n').map((line) => {
-            const trimmed = line.trim();
-            if (!trimmed || trimmed.startsWith('===') || trimmed.startsWith('---')) {
-              return new Paragraph({ spacing: { before: 60, after: 60 }, children: [] });
-            }
-
-            const isSectionHeading = trimmed.match(/^[A-H]\.\s/);
-            const isTaskHeading = trimmed.toUpperCase().startsWith('TUGAS') || trimmed.toUpperCase().startsWith('SOAL');
-
-            if (isSectionHeading) {
-              return new Paragraph({
-                spacing: { before: 240, after: 100 },
-                children: [
-                  new TextRun({
-                    text: trimmed,
-                    bold: true,
-                    size: 22,
-                    color: '047857',
-                  }),
-                ],
-              });
-            }
-
-            if (isTaskHeading) {
-              return new Paragraph({
-                spacing: { before: 180, after: 80 },
-                children: [
-                  new TextRun({
-                    text: trimmed,
-                    bold: true,
-                    size: 21,
-                    color: '1E293B',
-                  }),
-                ],
-              });
-            }
-
-            return new Paragraph({
-              spacing: { after: 100 },
-              children: [
-                new TextRun({
-                  text: trimmed,
-                  size: 20,
-                }),
-              ],
+          ...(() => {
+            const lines = data.lkpdLengkap.split('\n');
+            const result: any[] = [];
+            let currentTable: string[] | null = null;
+            
+            lines.forEach((line) => {
+              const trimmed = line.trim();
+              const isTableRow = trimmed.startsWith('|') && trimmed.endsWith('|');
+              
+              if (isTableRow) {
+                 if (!currentTable) currentTable = [];
+                 currentTable.push(trimmed);
+              } else {
+                 if (currentTable) {
+                    result.push({ type: 'table', rows: currentTable });
+                    currentTable = null;
+                 }
+                 if (trimmed) {
+                    result.push({ type: 'text', content: trimmed });
+                 }
+              }
             });
-          }),
+            if (currentTable) {
+               result.push({ type: 'table', rows: currentTable });
+            }
+
+            return result.map(item => {
+               if (item.type === 'table') {
+                  const tableRows: TableRow[] = [];
+                  item.rows.forEach((rowStr: string, rIdx: number) => {
+                     if (rowStr.replace(/[\s|-]/g, '').length === 0) return; // skip header separator like |---|---|
+                     const cells = rowStr.split('|').map(c => c.trim()).filter((_, i, arr) => i > 0 && i < arr.length - 1);
+                     const isHeader = rIdx === 0;
+                     tableRows.push(
+                        new TableRow({
+                           children: cells.map(cellText => new TableCell({
+                              margins: cellMargins,
+                              shading: isHeader ? { fill: 'ECFDF5' } : undefined,
+                              children: [
+                                 new Paragraph({
+                                    children: [new TextRun({ text: cellText.replace(/\*/g, '').replace(/#/g, ''), bold: isHeader, size: 20 })]
+                                 })
+                              ]
+                           }))
+                        })
+                     );
+                  });
+                  return [
+                    new Table({
+                       width: { size: 9500, type: WidthType.DXA },
+                       borders: tableBorderSolid,
+                       rows: tableRows
+                    }),
+                    new Paragraph({ spacing: { after: 100 }, children: [] })
+                  ];
+               } else {
+                  let textLine = item.content.replace(/\*/g, '').replace(/#/g, '').replace(/`/g, '');
+                  if (textLine.startsWith('===') || textLine.startsWith('---')) {
+                     return new Paragraph({ spacing: { before: 60, after: 60 }, children: [] });
+                  }
+
+                  const isSectionHeading = textLine.match(/^[A-H]\.\s/);
+                  const isTaskHeading = textLine.toUpperCase().startsWith('TUGAS') || textLine.toUpperCase().startsWith('SOAL');
+
+                  if (isSectionHeading) {
+                     return new Paragraph({
+                        spacing: { before: 240, after: 100 },
+                        children: [new TextRun({ text: textLine, bold: true, size: 22, color: '047857' })]
+                     });
+                  }
+                  if (isTaskHeading) {
+                     return new Paragraph({
+                        spacing: { before: 180, after: 80 },
+                        children: [new TextRun({ text: textLine, bold: true, size: 21, color: '1E293B' })]
+                     });
+                  }
+                  return new Paragraph({
+                     spacing: { after: 100 },
+                     children: [new TextRun({ text: textLine, size: 20 })]
+                  });
+               }
+            }).flat();
+          })(),
         ],
       }] : []),
     ],

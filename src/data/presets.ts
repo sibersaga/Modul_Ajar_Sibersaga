@@ -557,3 +557,70 @@ export const PRESET_MODUL_AJAR: Record<string, ModulAjarData> = {
     rubrikPenilaian: 'Penilaian Ceklis (Muncul / Belum Muncul): 1. Berani menyebutkan nama diri, 2. Mampu mencuci tangan mandiri, 3. Mau berbagi mainan dengan teman.'
   }
 };
+
+export const createFreshModulAjar = (): ModulAjarData => ({
+  id: `modul-${Date.now()}`,
+  judulModul: '',
+  updatedAt: new Date().toISOString(),
+
+  // 1. Credentials & Identitas Dokumen
+  namaSekolah: '',
+  namaPenyusun: '',
+  nip: '',
+  namaKepalaSekolah: '',
+  nipKepalaSekolah: '',
+  jenjang: 'SD',
+  fase: 'A',
+  kelas: '',
+  semester: 1,
+  bulan: 'Juli',
+  mingguKe: 1,
+  alokasiWaktu: '5 x 3 JP',
+  jumlahAnak: '',
+  modelPembelajaran: 'Problem Based Learning (PBL)',
+
+  // 2. Tema, Capaian & Karakteristik
+  temaSubtema: '',
+  elemenCp: '',
+  dimensiProfilLulusan: [],
+  identifikasiPesertaDidik: '',
+  materiPembelajaran: '',
+
+  // 3. Desain Pembelajaran
+  tujuanPembelajaran: '',
+  topikPembelajaran: '',
+  desainPembelajaranLintasDisiplinIlmu: '',
+  desainPembelajaranPraktikPedagogis: '',
+  desainPembelajaranKemitraanPembelajaran: [],
+  desainPembelajaranLingkunganPembelajaran: [],
+  desainPembelajaranPemanfaatanDigital: [],
+
+  // 4. Rencana Pelaksanaan Pembelajaran
+  rencanaPelaksanaanAwal: [],
+  rencanaPelaksanaanInti: '',
+  kegiatanHarian: [
+    {
+      hari: 1,
+      tahap: 'MEMAHAMI',
+      kegiatan: [
+        {
+          jp: 1,
+          judul: '',
+          deskripsi: '',
+          dimensi: '',
+          alatBahan: '',
+          langkah: [''],
+        },
+      ],
+    },
+  ],
+  rencanaPelaksanaanPenutup: [],
+
+  // 5. Asesmen & Instrumen
+  asesmenPembelajaranAwal: '',
+  asesmenPembelajaranProses: '',
+  asesmenPembelajaranAkhir: '',
+  lembarKerjaSiswa: '',
+  rubrikPenilaian: '',
+  lkpdLengkap: '',
+});

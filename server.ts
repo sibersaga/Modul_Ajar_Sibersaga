@@ -49,22 +49,50 @@ function getGenAI(): GoogleGenAI {
 
 // Resilient fallback runner for Gemini model calls
 async function generateWithFallback(ai: GoogleGenAI, options: { contents: any; config?: any }) {
-  const models = ['gemini-3.6-flash', 'gemini-3.8-flash'];
+  const models = ['gemini-3.8-flash', 'gemini-3.1-flash-lite', 'gemini-flash-latest'];
   let lastError: any = null;
+  
+  const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
   for (const model of models) {
-    try {
-      const resp = await ai.models.generateContent({
-        model,
-        contents: options.contents,
-        config: options.config,
-      });
-      return resp;
-    } catch (err: any) {
-      console.warn(`Model ${model} failed, trying alternative:`, err.message || err);
-      lastError = err;
+    const maxRetries = 2; // Only 2 attempts per model to avoid long proxy timeouts
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const resp = await ai.models.generateContent({
+          model,
+          contents: options.contents,
+          config: options.config,
+        });
+        return resp;
+      } catch (err: any) {
+        lastError = err;
+        const status = err?.status || err?.response?.status;
+        const message = err?.message || '';
+        
+        const isRateLimit = status === 429 || status === 'RESOURCE_EXHAUSTED' || message.includes('429') || message.includes('Quota exceeded');
+        const isUnavailable = status === 503 || status === 'UNAVAILABLE' || message.includes('503') || message.includes('high demand');
+
+        if (isRateLimit) {
+          if (attempt < maxRetries) {
+            let delayMs = 15000;
+            const retryMatch = message.match(/retry in (\d+(?:\.\d+)?)s/i);
+            if (retryMatch && retryMatch[1]) {
+              delayMs = Math.ceil(parseFloat(retryMatch[1]) * 1000) + 1000;
+            }
+            console.info(`Rate limit hit for ${model}. Waiting ${delayMs}ms before retry...`);
+            await sleep(delayMs);
+          }
+        } else if (isUnavailable) {
+          console.info(`Service unavailable for ${model}. Immediately falling back to the next model...`);
+          break;
+        } else {
+          break;
+        }
+      }
     }
   }
-  throw lastError;
+  
+  throw new Error('Sistem AI sedang mengalami lalu lintas tinggi (High Demand) di semua server. Mohon tunggu beberapa saat dan coba klik tombol Generate kembali.');
 }
 
 // Health check endpoint
@@ -92,7 +120,8 @@ Pedoman penulisan:
 1. Bahasa Indonesia baku, profesional, bernuansa pedagogis, lugas dan mendalam.
 2. Jangan memberikan instruksi balik kepada guru (seperti "Buatlah...", "Tuliskan...").
 3. Jangan menyertakan kata pengantar seperti "Berikut adalah...", "Tentu...", atau tanda kutip pembungkus.
-4. Sesuaikan konten dengan fase/jenjang yang diberikan di konteks.`;
+4. JANGAN gunakan tanda markdown seperti pagar (#) atau bintang (*). Gunakan list angka biasa jika butuh daftar.
+5. Sesuaikan konten dengan fase/jenjang yang diberikan di konteks.`;
 
     const userPrompt = `Field yang diminta: "${field}"
 Konteks teks input saat ini: "${text || ''}"
@@ -136,10 +165,17 @@ app.post('/api/ai/generate-lkpd', async (req: Request, res: Response) => {
     const ai = getGenAI();
     const systemInstruction = `Anda adalah ahli pengembang bahan ajar dan Lembar Kerja Peserta Didik (LKPD) Kurikulum Merdeka Kemendikbudristek RI serta praktisi Pembelajaran Mendalam (Deep Learning: Mindful, Meaningful, Joyful).
 Tugas Anda: Menghasilkan Lembar Kerja Peserta Didik (LKPD) yang kontekstual, menarik, aktif, dan siap cetak langsung digunakan oleh peserta didik di kelas.
-Pedoman Penulisan:
-1. Format teks rapi dan terstruktur dengan penomoran yang jelas.
+
+Pedoman Penulisan & Format Dokumen:
+1. Format teks rapi dan terstruktur dengan penomoran yang jelas. JANGAN gunakan tanda markdown seperti pagar (#) atau bintang (*) untuk penekanan. Gunakan huruf kapital atau penomoran biasa untuk judul.
 2. Gunakan bahasa Indonesia baku namun ramah dan mudah dipahami sesuai tahap perkembangan peserta didik.
-3. Jangan memberikan kata pengantar seperti "Tentu...", "Berikut adalah LKPD...", langsung sajikan dokumen LKPD dari judul/kop dokumen.`;
+3. Bagian "F. AKTIVITAS UTAMA & LEMBAR KERJA" HARUS HANYA terdiri dari 2 bentuk soal: SOAL ISIAN SINGKAT dan SOAL URAIAN. DILARANG membuat soal pilihan ganda (A, B, C), menjodohkan, atau format lainnya agar tata letak dokumen rapi dan tidak berantakan.
+4. Susunan Bagian F:
+   - BAGIAN I: SOAL ISIAN SINGKAT (Terdiri dari 3 butir soal bernalar dengan kalimat pernyataan/pertanyaan yang padat, terstruktur, dan diakhiri garis titik-titik jawaban yang rapi).
+   - BAGIAN II: SOAL URAIAN DAN PENALARAN (Terdiri dari 2-3 butir soal pemahaman mendalam yang membutuhkan penjelasan terurai, disertai ruang garis titik-titik bertingkat yang lapang untuk menuliskan jawaban).
+5. Tata Letak Soal: Tuliskan setiap butir soal dengan sangat rapi, memperhatikan kesejajaran (rata kiri-kanan proporsional), jarak antar-nomor yang jelas, dan penulisan ruang jawaban yang teratur menggunakan titik-titik (....................................................................................................).
+6. Tambahkan teks [ INFOGRAFIS: Judul Infografis ] di bagian Stimulus untuk ilustrasi data menarik.
+7. Jangan memberikan kata pengantar seperti "Tentu...", "Berikut adalah LKPD...", langsung sajikan dokumen LKPD dari judul/kop dokumen.`;
 
     const response = await generateWithFallback(ai, {
       contents: prompt,
@@ -176,17 +212,28 @@ Bertindaklah sebagai guru ${credentials.jenjang || 'SD'} yang kreatif. Buatkan s
 Mata pelajaran: ${credentials.temaSubtema || 'Sesuai dengan modul'}
 Kelas: ${credentials.kelas || 'Sesuai jenjang'}
 Materi: Sesuai dengan materi pembelajaran modul ini
-Tujuan pembelajaran: Sesuai dengan tujuan pembelajaran modul ini
-Buatkan LKPD yang terdiri dari:
-- Judul kegiatan
-- Tujuan kegiatan
-- Petunjuk pengerjaan yang singkat dan mudah dipahami
-- Kegiatan utama yang membuat siswa aktif
-- Minimal 5 soal atau tugas
-- Refleksi sederhana untuk siswa
-- Kunci jawaban
-Sesuaikan bahasa, tingkat kesulitan, dan aktivitas dengan karakteristik siswa kelas ${credentials.kelas || 'Sesuai jenjang'}. Buat kegiatan yang bisa digunakan langsung di kelas.
-Pastikan LKPD ditulis dalam bentuk Markdown atau teks terstruktur ke dalam field "lkpdLengkap".`;
+
+PENTING - ATURAN PENULISAN LKPD:
+1. JANGAN gunakan tanda markdown seperti bintang (*) atau pagar (#) dalam output Anda. Gunakan huruf kapital atau penomoran biasa untuk judul.
+2. Bagian "F. AKTIVITAS UTAMA & LEMBAR KERJA" HARUS HANYA terdiri dari 2 bentuk soal: SOAL ISIAN SINGKAT dan SOAL URAIAN. DILARANG membuat soal pilihan ganda (A, B, C), menjodohkan, atau format lainnya agar tata letak lembar kerja rapi dan tidak berantakan.
+3. Susunan Bagian F:
+   - BAGIAN I: SOAL ISIAN SINGKAT (Terdiri dari 3 butir soal bernalar dengan pernyataan/pertanyaan terstruktur dan garis titik-titik jawaban rapi).
+   - BAGIAN II: SOAL URAIAN DAN PENALARAN (Terdiri dari 2-3 butir soal pemahaman mendalam yang membutuhkan penjelasan terurai, disertai ruang garis titik-titik bertingkat yang lapang untuk menuliskan jawaban).
+4. Tata Letak Soal: Tuliskan setiap butir soal dengan sangat rapi, memperhatikan kesejajaran (rata kiri-kanan proporsional), jarak antar-nomor yang jelas, dan penulisan ruang jawaban yang teratur menggunakan titik-titik (....................................................................................................).
+5. Pada bagian Stimulus Kontekstual, tambahkan INFOGRAFIS. Gunakan format teks [ INFOGRAFIS: (Judul Infografis) ] lalu berikan deskripsi/poin-poin data menarik di bawahnya untuk memperkaya konteks soal.
+6. Jangan tambahkan kata pengantar, langsung sajikan isi dokumen dari judul.
+
+Buatkan LKPD yang memuat bagian-bagian berikut:
+A. IDENTITAS SISWA (Nama, Kelas, No Absen)
+B. TUJUAN KEGIATAN
+C. ALAT DAN BAHAN
+D. PETUNJUK PENGERJAAN
+E. STIMULUS KONTEKSTUAL & INFOGRAFIS (Sajikan teks cerita/konteks dan tambahkan [ INFOGRAFIS: Judul ] beserta isinya yang menarik)
+F. AKTIVITAS UTAMA & LEMBAR KERJA (SOAL ISIAN SINGKAT & URAIAN)
+G. REFLEKSI SAYA
+H. KUNCI JAWABAN & RUBRIK PENILAIAN (Sajikan bagian ini khusus untuk guru)
+
+Tuliskan LKPD tersebut ke dalam field "lkpdLengkap" sebagai teks terstruktur.`;
       lkpdField = `\n  "lkpdLengkap": "...",`;
     }
 
@@ -202,10 +249,12 @@ Berdasarkan data awal berikut:
 - Minggu ke: ${credentials.mingguKe || 2}
 - Alokasi Waktu: ${credentials.alokasiWaktu || '5 x 3 JP'} (Total 5 Hari, 3 JP per hari)
 - Tema/Subtema yang diinginkan: ${credentials.temaSubtema || 'Aku dan Lingkungan Sekitarku'}
+- Capaian Pembelajaran (CP): ${credentials.elemenCp || 'Rumuskan CP yang sesuai'}
 - Fokus Khusus: ${fokusPembelajaran || 'Pengembangan literasi, karakter gotong royong, dan kemandirian'}
 ${lkpdInstruction}
 
 TUGAS: Hasilkan Modul Ajar lengkap dan bermutu tinggi dalam format JSON murni.
+PENTING: JANGAN gunakan format markdown seperti bintang (*) atau pagar (#) pada value JSON (kecuali tabel pada LKPD). Gunakan penomoran standar.
 JSON HARUS memiliki struktur persis sebagai berikut:
 {
   "temaSubtema": "...",
@@ -325,6 +374,20 @@ app.post('/api/generate-docx', async (req: Request, res: Response) => {
     const data = req.body;
     if (!data) {
       return res.status(400).json({ status: 400, message: 'Data formulir tidak boleh kosong' });
+    }
+
+    const paperConfig = data.paperConfig || { size: 'A4' };
+    let widthDxa = 11906; // A4 default (210mm)
+    let heightDxa = 16838; // A4 default (297mm)
+
+    if (paperConfig.size === 'F4') {
+      widthDxa = 12189; // F4 / Folio (215mm)
+      heightDxa = 18709; // 330mm
+    } else if (paperConfig.size === 'CUSTOM') {
+      const w = paperConfig.customWidthMm && paperConfig.customWidthMm > 50 ? paperConfig.customWidthMm : 215;
+      const h = paperConfig.customHeightMm && paperConfig.customHeightMm > 50 ? paperConfig.customHeightMm : 330;
+      widthDxa = Math.round(w * 56.6929);
+      heightDxa = Math.round(h * 56.6929);
     }
 
     const tableBorderSolid = {
@@ -511,7 +574,11 @@ app.post('/api/generate-docx', async (req: Request, res: Response) => {
         {
           properties: {
             page: {
-              margin: { top: 1440, right: 1440, bottom: 1440, left: 1440 },
+              size: {
+                width: widthDxa,
+                height: heightDxa,
+              },
+              margin: { top: 1134, right: 1134, bottom: 1134, left: 1134 },
             },
           },
           headers: {
@@ -682,7 +749,15 @@ app.post('/api/generate-docx', async (req: Request, res: Response) => {
         },
         // LKPD Page (if exists)
         ...(data.lkpdLengkap ? [{
-          properties: {},
+          properties: {
+            page: {
+              size: {
+                width: widthDxa,
+                height: heightDxa,
+              },
+              margin: { top: 1134, right: 1134, bottom: 1134, left: 1134 },
+            },
+          },
           children: [
             new Paragraph({
               alignment: AlignmentType.CENTER,

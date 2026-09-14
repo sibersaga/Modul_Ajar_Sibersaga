@@ -72,7 +72,8 @@ Buatkan Lembar Kerja Peserta Didik (LKPD) yang menarik, berorientasi Pembelajara
 
 [SPESIFIKASI KHUSUS LKPD]
 - Format Aktivitas: ${activityInstruction}
-- Jumlah Latihan Soal / Penugasan: ${questionCount} soal/tugas variatif
+- Tipe Soal: HANYA ISIAN SINGKAT dan URAIAN saja (TIDAK menggunakan pilihan ganda atau format rumit agar tata letak rapi dan tertib)
+- Jumlah Latihan Soal: ${questionCount} butir soal terstruktur (terbagi atas Isian Singkat dan Uraian)
 - Tingkat Kesulitan: ${difficultyInstruction}
 ${additionalFocus ? `- Fokus Tambahan Guru: ${additionalFocus}` : ''}
 
@@ -91,15 +92,16 @@ Susun dokumen LKPD dengan bagian-bagian berikut secara rapi, berformat teratur d
    - Tuliskan 3-4 petunjuk pengerjaan yang singkat, jelas, dan memotivasi
 6. STIMULUS KONTEKSTUAL (APERSEPSI)
    - Narasi pemantik singkat, cerita keseharian, atau deskripsi gambar yang membangkitkan rasa ingin tahu siswa
-7. KEGIATAN EKSPLORASI UTAMA
-   - Langkah kerja aktivitas yang membuat siswa aktif bergerak, mengamati, berdiskusi, atau berkarya
-8. LEMBAR SOAL & PENUGASAN (Sebanyak ${questionCount} Soal/Tugas Bervariasi)
-   - Berikan variasi: isian bernalar, menjodohkan konsep, menganalisis situasi, dan tugas ekspresi/kreasi
-   - Sediakan ruang/garis bertitik tempat siswa menuliskan jawaban mereka
-9. REFLEKSI SAYA (UNTUK SISWA)
+7. F. AKTIVITAS UTAMA & LEMBAR KERJA (SOAL ISIAN SINGKAT & URAIAN)
+   - PENTING: Bagian ini HARUS HANYA terdiri dari 2 kategori soal berikut:
+     * BAGIAN I: SOAL ISIAN SINGKAT (Pertanyaan terarah bernalar kritis dengan garis titik-titik jawaban rapi)
+     * BAGIAN II: SOAL URAIAN DAN PENALARAN (Pertanyaan analisis pemahaman kontekstual mendalam dengan ruang garis bertitik yang lapang)
+   - DILARANG membuat soal pilihan ganda (A, B, C, D), menjodohkan berpanah, atau format ASCII lainnya agar tata letak tidak berantakan.
+   - Tata letak penulisan: Setiap butir soal disusun dengan kalimat tertib, memperhatikan rata kiri-kanan proporsional, margin dan jarak antarsoal yang lega, serta garis titik-titik tempat menulis jawaban (....................................................................................................).
+8. REFLEKSI SAYA (UNTUK SISWA)
    - Pilihan emotikon perasaan (senang, bingung, bersemangat) dan 1-2 pertanyaan refleksi singkat
-10. KUNCI JAWABAN & RUBRIK PENILAIAN SINGKAT (PANDUAN GURU)
-   - Kunci jawaban ringkas dan kriteria penskoran untuk memudahkan guru menilai
+9. KUNCI JAWABAN & RUBRIK PENILAIAN SINGKAT (PANDUAN GURU)
+   - Kunci jawaban ringkas dan pedoman penskoran untuk soal isian dan uraian untuk memudahkan guru menilai
 
 CATATAN:
 Tuliskan langsung isi dokumen LKPD lengkap dalam Bahasa Indonesia baku yang komunikatif dan ramah anak. Gunakan penomoran dan pembagian bab (A., B., C., D., E., F., G., H.) yang jelas agar rapi. Jangan sertakan pengantar seperti "Berikut adalah LKPD...".`;
@@ -175,57 +177,41 @@ Ketika kita mengamati dengan teliti, kita bisa menemukan contoh nyata dari ${mat
 Mari kita lakukan eksplorasi bersama dan buktikan kemampuan terbaikmu!
 
 ------------------------------------------------------------------------
-G. AKTIVITAS UTAMA & PENUGASAN SISWA
+F. AKTIVITAS UTAMA & LEMBAR KERJA (SOAL ISIAN SINGKAT & URAIAN)
 ------------------------------------------------------------------------
 
-TUGAS 1: Mengenal dan Mengamati (Pilihan Ganda Bernalar)
-Berilah tanda silang (X) pada huruf A, B, atau C di depan jawaban yang paling tepat!
+BAGIAN I: SOAL ISIAN SINGKAT
+Petunjuk Pengerjaan: Isilah titik-titik pada kalimat di bawah ini dengan jawaban yang singkat, tepat, dan benar!
 
-1. Berdasarkan pengamatanmu mengenai ${topik}, manakah pernyataan di bawah ini yang paling benar?
-   A. Kita harus mempelajarinya dengan sungguh-sungguh dan menerapkannya setiap hari.
-   B. Kita hanya perlu mengetahuinya tanpa mempraktikkannya.
-   C. Hal tersebut tidak ada hubungannya dengan kehidupan kita sehari-hari.
-   Jawaban Siswa: [ ...... ]
-
-2. Sikap yang mencerminkan profil pelajar bergotong royong saat mengerjakan tugas ini adalah...
-   A. Mengerjakan sendiri tanpa mau membantu teman yang kesulitan.
-   B. Saling berdiskusi, bertukar pendapat dengan santun, dan saling menghargai.
-   C. Menunggu teman lain menyelesaikan jawaban terlebih dahulu.
-   Jawaban Siswa: [ ...... ]
-
-------------------------------------------------------------------------
-TUGAS 2: Menjodohkan Konsep (Tariklah Garis Penghubung)
-Pasangkan pernyataan di Kolom Kiri dengan konsep yang tepat di Kolom Kanan!
-
-[KOLOM KIRI: Ciri / Situasi]              [KOLOM KANAN: Konsep Materi]
-(1) Pemahaman awal tentang materi   ---->   (A) Nilai Karakter Gotong Royong
-(2) Sikap bekerjasama dengan rukun  ---->   (B) Pemahaman Konsep ${materi.slice(0, 20)}
-(3) Tindakan menjaga kebaikan       ---->   (C) Penerapan dalam Kehidupan Sehari-hari
-
-------------------------------------------------------------------------
-TUGAS 3: Isian Singkat Bernalar Kritis
-Isilah titik-titik di bawah ini dengan jawaban yang tepat!
-
-3. Tuliskan 2 (dua) contoh nyata penerapan ${topik} yang pernah kamu jumpai atau lakukan di rumah atau sekolah!
+1. Berdasarkan apa yang telah kita pelajari mengenai ${topik}, salah satu hal penting yang perlu kita biasakan dan terapkan dalam aktivitas sehari-hari adalah ...
    Jawaban:
-   a. ............................................................................................
-   b. ............................................................................................
+   ....................................................................................................
 
-4. Mengapa kita perlu memahami ${materi} dengan baik? Jelaskan pendapatmu secara singkat!
+2. Ketika kita memahami dan mempraktikkan materi ${materi} dengan sungguh-sungguh, manfaat utama yang dirasakan oleh diri kita dan lingkungan sekitar adalah ...
    Jawaban:
-   ................................................................................................
-   ................................................................................................
+   ....................................................................................................
+
+3. Sikap Profil Pelajar Pancasila yang paling kita tunjukkan saat bekerjasama dan saling membantu menyelesaikan tugas belajar bersama teman adalah sikap ...
+   Jawaban:
+   ....................................................................................................
 
 ------------------------------------------------------------------------
-TUGAS 4: Tantangan Kreasi & Ekspresi Siswa
-5. Gambarkan atau tuliskan sebuah pesan positif sederhana yang mengajak teman-temanmu untuk menerapkan nilai-nilai pembelajaran hari ini!
-   +--------------------------------------------------------------------+
-   |                                                                    |
-   |                                                                    |
-   |                  [ KOTAK KREASI & GAMBAR SISWA ]                   |
-   |                                                                    |
-   |                                                                    |
-   +--------------------------------------------------------------------+
+BAGIAN II: SOAL URAIAN DAN PENALARAN
+Petunjuk Pengerjaan: Jawablah pertanyaan-pertanyaan berikut dengan kalimat penjelasanmu sendiri secara runtut, rapi, dan jelas!
+
+4. Mengapa kita perlu memahami materi ${materi} dengan baik? Jelaskan alasanmu secara lengkap dan berikan 2 (dua) contoh nyata yang pernah kamu temui di lingkungan sekolah atau rumah!
+   Jawaban / Uraian:
+   ....................................................................................................
+   ....................................................................................................
+   ....................................................................................................
+   ....................................................................................................
+
+5. Bagaimana tindakan atau langkah nyata yang akan kamu lakukan apabila melihat seorang teman mengalami kesulitan dalam memahami materi ${topik}? Uraikan pendapat dan sikap terbaikmu!
+   Jawaban / Uraian:
+   ....................................................................................................
+   ....................................................................................................
+   ....................................................................................................
+   ....................................................................................................
 
 ------------------------------------------------------------------------
 G. REFLEKSI DIRI SISWA
@@ -241,21 +227,21 @@ Tuliskan di sini: ..............................................................
 H. KUNCI JAWABAN & RUBRIK PENILAIAN (PANDUAN GURU)
 ------------------------------------------------------------------------
 KUNCI JAWABAN:
-1. A (Pernyataan yang tepat tentang menerapkan ilmu)
-2. B (Saling berdiskusi dan bertukar pendapat)
-3. Pasangan: (1)-(B), (2)-(A), (3)-(C)
-4. Kebijaksanaan guru berdasarkan penalaran siswa (Logis, relevan dengan materi)
-5. Kreasi gambar/pesan positif siswa dinilai berdasarkan kesesuaian pesan dan kerapian
+1. Menerapkan nilai kebaikan dan pemahaman materi secara konsisten dalam kehidupan sehari-hari.
+2. Lingkungan menjadi lebih tertib, harmonis, serta meningkatkan pemahaman dan keterampilan diri.
+3. Gotong Royong / Kolaborasi dan Mandiri.
+4. Rubrik Penilaian Uraian: Jawaban memuat alasan logis pentingnya materi serta 2 contoh konkret yang relevan dengan kehidupan siswa.
+5. Rubrik Penilaian Uraian: Menunjukkan empati, kemauan membantu teman dengan santun tanpa merendahkan, dan mencerminkan akhlak mulia.
 
 PEDOMAN PENSKORAN:
-- Soal Pilihan Ganda (2 soal) : Skor maksimal 20 (masing-masing 10)
-- Menjodohkan (3 pasang)      : Skor maksimal 30 (masing-masing 10)
-- Isian Singkat (2 soal)      : Skor maksimal 30 (masing-masing 15)
-- Tugas Kreasi (1 tugas)       : Skor maksimal 20
+- Soal Isian Singkat (3 butir) : Masing-masing skor maksimal 10 (Total 30 poin)
+- Soal Uraian (2 butir)        : Masing-masing skor maksimal 35 (Total 70 poin)
+Total Skor Maksimal = 100
 Nilai Akhir = (Total Skor yang Diperoleh / 100) x 100
-Kategori:
+
+Kategori Capaian:
 • 86 - 100 : Sangat Baik (Tuntas Istimewa)
-• 71 - 85  : Baik (Tuntas)
+• 71 - 85  : Baik (Tuntas Memuaskan)
 • 60 - 70  : Cukup (Perlu Pemantapan)
 • < 60     : Perlu Bimbingan Tambahan`;
 }

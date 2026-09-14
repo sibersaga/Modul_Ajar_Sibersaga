@@ -17,69 +17,100 @@ export const ValidationBanner: React.FC<ValidationBannerProps> = ({
 }) => {
   const { isValid, errors, completedCount, totalRequired, percentComplete } = summary;
 
-  return (
-    <div className="mb-6 space-y-3">
-      {/* Interactive Progress & Status Bar */}
-      <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div
-            className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs shadow-xs ${
-              isValid
-                ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                : percentComplete >= 75
-                ? 'bg-amber-100 text-amber-800 border border-amber-300'
-                : 'bg-rose-100 text-rose-800 border border-rose-300'
-            }`}
-          >
-            {percentComplete}%
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="text-xs font-bold text-slate-900">
-                Kelengkapan Modul Ajar: {completedCount} dari {totalRequired} Bidang Wajib
-              </h3>
-              {isValid ? (
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                  <CheckCircle2 className="w-3 h-3" /> Siap Unduh
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
-                  <AlertCircle className="w-3 h-3" /> {errors.length} Bidang Perlu Dilengkapi
-                </span>
-              )}
-            </div>
-            <p className="text-[11px] text-slate-500">
-              {isValid
-                ? 'Seluruh komponen penting telah lengkap. Anda dapat mengunduh berkas Word (.docx) atau mencetak langsung.'
-                : 'Bidang bertanda bintang (*) wajib diisi agar modul memenuhi format baku Kurikulum Merdeka.'}
-            </p>
-          </div>
-        </div>
+  // Calculate segment progress
+  const sections = [
+    { id: 'identitas', title: 'Identitas' },
+    { id: 'capaian', title: 'Capaian' },
+    { id: 'rpp', title: 'RPP' },
+    { id: 'asesmen', title: 'Asesmen' },
+  ];
 
-        {/* Progress Bar & Detail Action */}
-        <div className="flex items-center gap-3 md:w-64 flex-shrink-0">
-          <div className="flex-1 bg-slate-100 h-2.5 rounded-full overflow-hidden border border-slate-200">
+  const getSectionStatus = (sectionId: string) => {
+    // We import REQUIRED_FIELDS_CONFIG from validation.ts but since it's hard to import directly here without breaking,
+    // let's just infer from the errors. If an error's section matches sectionId, the section is not fully complete.
+    const sectionErrors = errors.filter(e => e.section === sectionId);
+    if (sectionErrors.length === 0) return 'complete';
+    return 'incomplete';
+  };
+
+  return (
+    <div className="mb-6 space-y-3 sticky top-4 z-40">
+      {/* Interactive Progress & Status Bar */}
+      <div className="bg-white/90 backdrop-blur-md border border-slate-200 rounded-xl p-4 shadow-md flex flex-col gap-4">
+        
+        {/* Top summary row */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
             <div
-              className={`h-full transition-all duration-500 rounded-full ${
+              className={`w-12 h-12 rounded-xl flex items-center justify-center font-black text-sm shadow-xs ${
                 isValid
-                  ? 'bg-emerald-500'
+                  ? 'bg-gradient-to-br from-emerald-400 to-emerald-600 text-white border border-emerald-500'
                   : percentComplete >= 75
-                  ? 'bg-amber-500'
-                  : 'bg-rose-500'
+                  ? 'bg-gradient-to-br from-amber-400 to-amber-600 text-white border border-amber-500'
+                  : 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white border border-indigo-500'
               }`}
-              style={{ width: `${percentComplete}%` }}
-            ></div>
+            >
+              {percentComplete}%
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-bold text-slate-900">
+                  Kelengkapan Modul Ajar: {completedCount} dari {totalRequired} Bidang Wajib
+                </h3>
+                {isValid ? (
+                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <CheckCircle2 className="w-3 h-3" /> Siap Unduh
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
+                    <AlertCircle className="w-3 h-3" /> {errors.length} Bidang Kosong
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-slate-500 mt-0.5">
+                {isValid
+                  ? 'Seluruh komponen penting telah lengkap. Anda dapat mengunduh berkas Word (.docx) atau mencetak langsung.'
+                  : 'Selesaikan pengisian agar modul memenuhi format baku Kurikulum Merdeka.'}
+              </p>
+            </div>
           </div>
           {!isValid && (
             <button
               type="button"
               onClick={onOpenValidationModal}
-              className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 hover:underline whitespace-nowrap cursor-pointer"
+              className="text-xs font-semibold px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg transition-colors cursor-pointer"
             >
-              Lihat Daftar
+              Lihat Detail Kosong
             </button>
           )}
         </div>
+
+        {/* Segmented Progress Bar indicating missing parts */}
+        <div className="flex items-center gap-1 h-3 mt-1">
+          {sections.map((section, idx) => {
+            const status = getSectionStatus(section.id);
+            return (
+              <div 
+                key={section.id} 
+                className="flex-1 h-full flex flex-col group relative"
+                title={`${section.title} - ${status === 'complete' ? 'Lengkap' : 'Belum Lengkap'}`}
+              >
+                <div 
+                  className={`w-full h-full rounded-full transition-colors duration-300 ${
+                    status === 'complete' 
+                      ? 'bg-emerald-500' 
+                      : 'bg-slate-200 border border-slate-300'
+                  } ${idx === 0 ? 'rounded-l-full' : ''} ${idx === sections.length - 1 ? 'rounded-r-full' : ''}`}
+                ></div>
+                {/* Tooltip on hover */}
+                <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-white px-2 py-0.5 rounded shadow-sm border border-slate-200">
+                  {section.title} {status === 'complete' ? '✅' : '❌'}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+        
       </div>
 
       {/* Prominent Warning Banner if user attempted an action and there are missing fields */}
@@ -97,7 +128,6 @@ export const ValidationBanner: React.FC<ValidationBannerProps> = ({
                 </p>
               </div>
             </div>
-
             <div className="flex flex-wrap items-center gap-1.5 pl-7 sm:pl-0">
               {errors.slice(0, 3).map((err) => (
                 <button

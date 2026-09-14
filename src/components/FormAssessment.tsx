@@ -10,7 +10,6 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { ModulAjarData } from '../types';
-import { AiSparkleButton } from './AiSparkleButton';
 
 interface FormAssessmentProps {
   data: ModulAjarData;
@@ -62,18 +61,12 @@ export const FormAssessment: React.FC<FormAssessmentProps> = ({
               <label htmlFor="input-asesmenAwal" className="text-xs font-semibold text-slate-700">
                 Asesmen Awal (Diagnostik)
               </label>
-              <AiSparkleButton
-                field="asesmenPembelajaranAwal"
-                currentValue={data.asesmenPembelajaranAwal}
-                context={data}
-                onSuccess={(val) => onChange('asesmenPembelajaranAwal', val)}
-                title="Rekomendasikan teknik asesmen diagnostik awal"
-              />
+              
             </div>
             <textarea
               id="input-asesmenAwal"
               rows={3}
-              value={data.asesmenPembelajaranAwal}
+              value={data.asesmenPembelajaranAwal || ''}
               onChange={(e) => onChange('asesmenPembelajaranAwal', e.target.value)}
               placeholder="Contoh: Tanya jawab informal mengenai pengetahuan awal, observasi kesiapan gerak..."
               className="w-full text-sm rounded-lg border border-slate-300 px-3 py-2 text-slate-800 focus:border-indigo-500 focus:outline-none resize-y"
@@ -85,18 +78,12 @@ export const FormAssessment: React.FC<FormAssessmentProps> = ({
               <label htmlFor="input-asesmenProses" className="text-xs font-semibold text-slate-700">
                 Asesmen Proses (Formatif / Observasi Berkala) <span className="text-rose-500 font-bold">*</span>
               </label>
-              <AiSparkleButton
-                field="asesmenPembelajaranProses"
-                currentValue={data.asesmenPembelajaranProses}
-                context={data}
-                onSuccess={(val) => onChange('asesmenPembelajaranProses', val)}
-                title="Rekomendasikan teknik asesmen formatif"
-              />
+              
             </div>
             <textarea
               id="input-asesmenProses"
               rows={3}
-              value={data.asesmenPembelajaranProses}
+              value={data.asesmenPembelajaranProses || ''}
               onChange={(e) => onChange('asesmenPembelajaranProses', e.target.value)}
               placeholder="Contoh: Lembar observasi keterlibatan, catatan anekdot kerjasama..."
               className={`w-full text-sm rounded-lg border px-3 py-2 text-slate-800 focus:outline-none transition-all resize-y ${
@@ -119,18 +106,12 @@ export const FormAssessment: React.FC<FormAssessmentProps> = ({
             <label htmlFor="input-asesmenAkhir" className="text-xs font-semibold text-slate-700">
               Asesmen Akhir (Sumatif / Unjuk Kerja / Portofolio)
             </label>
-            <AiSparkleButton
-              field="asesmenPembelajaranAkhir"
-              currentValue={data.asesmenPembelajaranAkhir}
-              context={data}
-              onSuccess={(val) => onChange('asesmenPembelajaranAkhir', val)}
-              title="Rekomendasikan bentuk asesmen sumatif akhir"
-            />
+            
           </div>
           <textarea
             id="input-asesmenAkhir"
             rows={2}
-            value={data.asesmenPembelajaranAkhir}
+            value={data.asesmenPembelajaranAkhir || ''}
             onChange={(e) => onChange('asesmenPembelajaranAkhir', e.target.value)}
             placeholder="Contoh: Penilaian unjuk kerja kreasi pohon keluarga dan presentasi bercerita..."
             className="w-full text-sm rounded-lg border border-slate-300 px-3 py-2 text-slate-800 focus:border-indigo-500 focus:outline-none resize-y"
@@ -200,18 +181,12 @@ export const FormAssessment: React.FC<FormAssessmentProps> = ({
             <label htmlFor="input-lembarKerjaSiswa" className="text-xs font-semibold text-slate-700">
               Ringkasan Lembar Kerja Peserta Didik (LKPD) / Penugasan <span className="text-rose-500 font-bold">*</span>
             </label>
-            <AiSparkleButton
-              field="lembarKerjaSiswa"
-              currentValue={data.lembarKerjaSiswa}
-              context={data}
-              onSuccess={(val) => onChange('lembarKerjaSiswa', val)}
-              title="Rekomendasikan panduan lembar kerja aktivitas peserta didik"
-            />
+            
           </div>
           <textarea
             id="input-lembarKerjaSiswa"
             rows={3}
-            value={data.lembarKerjaSiswa}
+            value={data.lembarKerjaSiswa || ''}
             onChange={(e) => onChange('lembarKerjaSiswa', e.target.value)}
             placeholder="Contoh: LKPD 1: Menjodohkan gambar peran keluarga. LKPD 2: Menempelkan foto keluarga..."
             className={`w-full text-sm rounded-lg border px-3 py-2 text-slate-800 focus:outline-none transition-all resize-y ${
@@ -233,18 +208,12 @@ export const FormAssessment: React.FC<FormAssessmentProps> = ({
             <label htmlFor="input-rubrikPenilaian" className="text-xs font-semibold text-slate-700">
               Rubrik Penilaian & Kriteria Ketercapaian Tujuan Pembelajaran (KKTP)
             </label>
-            <AiSparkleButton
-              field="rubrikPenilaian"
-              currentValue={data.rubrikPenilaian}
-              context={data}
-              onSuccess={(val) => onChange('rubrikPenilaian', val)}
-              title="Rekomendasikan kriteria rubrik penilaian skala 1-4"
-            />
+            
           </div>
           <textarea
             id="input-rubrikPenilaian"
             rows={4}
-            value={data.rubrikPenilaian}
+            value={data.rubrikPenilaian || ''}
             onChange={(e) => onChange('rubrikPenilaian', e.target.value)}
             placeholder="Contoh: Kriteria 1: Pemahaman konsep (Perlu Bimbingan / Cukup / Baik / Sangat Baik)..."
             className="w-full text-sm rounded-lg border border-slate-300 px-3 py-2 text-slate-800 focus:border-indigo-500 focus:outline-none resize-y"
